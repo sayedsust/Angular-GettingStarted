@@ -57,6 +57,10 @@ export class ProductListComponent implements OnInit{
     "imageUrl": "assets/images/garden_cart.png"
   }];
 
+  onRatingClicked(message: string): void {
+    this.pageTitle = 'Product List: ' + message;
+  }
+
   toggleImage(): void {
     this.showImage = !this.showImage;
   }
