@@ -1,16 +1,18 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { UserSettingsComponent } from './user-settings/user-settings.component';
+import { UserSettingsFormComponent } from './user-settings-form/user-settings-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UserSettingsComponent
+    UserSettingsFormComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
