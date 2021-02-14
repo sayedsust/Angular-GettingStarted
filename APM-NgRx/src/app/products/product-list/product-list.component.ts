@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { Product } from '../product';
-import { ProductService } from '../product.service';
 
 /* NgRx */
 import { Store } from '@ngrx/store';
-import { getCurrentProduct, getShowProductCode, State } from '../state/product.reducer';
+import { State, getShowProductCode, getCurrentProduct, getProducts, getError } from '../state/product.reducer';
 import * as ProductActions from '../state/product.actions';
 
 @Component({
@@ -13,37 +13,33 @@ import * as ProductActions from '../state/product.actions';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent implements OnInit, OnDestroy {
+export class ProductListComponent implements OnInit{
   pageTitle = 'Products';
-  errorMessage: string;
+  displayCode$: Observable<boolean>;
+  errorMessage$: Observable<string>;
 
-  displayCode: boolean;
-
-  products: Product[];
-
+  products$: Observable<Product[]>;
   // Used to highlight the selected product in the list
-  selectedProduct: Product | null;
+  selectedProduct$: Observable<Product>;
 
-  constructor(private store: Store<State>, private productService: ProductService) { }
+  constructor(private store: Store<State>) { }
 
   ngOnInit(): void {
-    // TODO: Unsubscribe
-    this.store.select(getCurrentProduct).subscribe(
-      currentProduct => this.selectedProduct = currentProduct
-    );
 
-    this.productService.getProducts().subscribe({
-      next: (products: Product[]) => this.products = products,
-      error: err => this.errorMessage = err
-    });
+    // Do NOT subscribe here because it uses an async pipe
+    // This gets the initial values until the load is complete.
+    this.products$ = this.store.select(getProducts);
 
-    // TODO: Unsubscribe
-    this.store.select(getShowProductCode).subscribe(
-      showProductCode => this.displayCode = showProductCode
-      );
-  }
+    // Do NOT subscribe here because it uses an async pipe
+    this.errorMessage$ = this.store.select(getError);
 
-  ngOnDestroy(): void {
+    this.store.dispatch(ProductActions.loadProducts());
+
+    // Do NOT subscribe here because it uses an async pipe
+    this.selectedProduct$ = this.store.select(getCurrentProduct);
+
+    // Do NOT subscribe here because it uses an async pipe
+    this.displayCode$ = this.store.select(getShowProductCode);
   }
 
   checkChanged(): void {

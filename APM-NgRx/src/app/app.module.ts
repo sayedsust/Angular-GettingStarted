@@ -19,6 +19,7 @@ import { UserModule } from './user/user.module';
 
 /* NgRx */
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { StoreModule } from '@ngrx/store';
     HttpClientInMemoryWebApiModule.forRoot(ProductData),
     UserModule,
     AppRoutingModule,
-    StoreModule.forRoot({})
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([])
   ],
   declarations: [
     AppComponent,
